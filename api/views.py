@@ -22,6 +22,3 @@ async def process_pick_with_api_async(resource_list, model_name):
     # Your processing logic here
     await asyncio.sleep(5)  # Simulating a long-running task
     return {"message": "Processing complete"}
-
-
-    
