@@ -1,6 +1,8 @@
 import os, gc, datetime, subprocess, pickle, argparse, sys, shutil
 import numpy as np
 from PIL import Image, ImageFile
+import requests
+from io import BytesIO
 import tensorflow as tf
 from tensorflow.keras import callbacks
 from tensorflow.keras.layers import Dense, Conv2D, GlobalAveragePooling2D, BatchNormalization
@@ -209,7 +211,7 @@ def process_pick(model_name, target_folder):
     return len(candidate_images)  # 선택된 이미지의 수 반환
 
 def process_pick_with_api(model_name, resource_list):
-    # 평가 모델 로드
+    # Load evaluation model
     model_path = os.path.join(BASE_DIR, 'tastemodels', f'{model_name}.keras')
     pkl_path = os.path.join(BASE_DIR, 'tastemodels', f'{model_name}.pkl')
     model = tf.keras.models.load_model(model_path, custom_objects={"contrastive_loss": contrastive_loss})
@@ -219,19 +221,32 @@ def process_pick_with_api(model_name, resource_list):
         embeddings = pickle.load(f)
     
     for resource_object in resource_list:
-        image_np = resource_object['image_np']
-        new_embedding = embedding_model.predict(image_np)[0]
-        distance = evaluate_similarity(new_embedding, embeddings)
+        image_url = resource_object['image_url']
+        try:
+            response = requests.get(image_url)
+            response.raise_for_status()  # 에러가 발생하면 예외 발생
+            image = Image.open(BytesIO(response.content))
+            if image is not None:
+                image_np = resize_image(image)
+                new_embedding = embedding_model.predict(image_np)[0]
+                distance = evaluate_similarity(new_embedding, embeddings)
 
-        if distance >= 50:
-            similarity_percentage = 0.0
-        else:
-            similarity_percentage = (50 - distance) / 50 * 100
-            similarity_score = f"{similarity_percentage:.2f}%"
-        
-        resource_object['similarity_score'] = similarity_score
+                if distance >= 50:
+                    similarity_percentage = 0.0
+                else:
+                    similarity_percentage = (50 - distance) / 50 * 100
+                    similarity_score = f"{similarity_percentage:.2f}%"
+                
+                resource_object['similarity_score'] = similarity_score
+            else:
+                # Handle the case where image cannot be retrieved
+                resource_object['similarity_score'] = "Image not available"
+        except Exception as e:
+            # Handle the exception if image cannot be retrieved or processed
+            resource_object['similarity_score'] = f"Error: {str(e)}"
 
     return resource_list
+
 
 # TUNE 모드 함수 ( 오버 피팅 가능성이 높아서 Embedding 방식에서 Fine-Tune은 조금더 검증해야 함)
 def finetune(target_folder, model, batch_size_finetune=16, learning_rate=0.0001):
