@@ -14,6 +14,6 @@ class CoSelectorView(APIView):
 
         # Call the function to process the API with the received data
         response_data = process_pick_with_api(resource_list=resource_list, model_name=model_name)
-        
-        # Return the response
+        print("나가기 전에 체크 한사바리")
+        print(response_data)
         return Response(response_data, status=status.HTTP_201_CREATED)
