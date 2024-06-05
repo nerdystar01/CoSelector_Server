@@ -7,8 +7,14 @@ from coselector.coselector_0527 import process_pick_with_api  # Ensure this is t
 
 class CoSelectorView(APIView):
     def post(self, request):
-        request_list = request.data
-        print(request_list)
-        response_data = process_pick_with_api(resource_list= request_list)
+        # Extract model_name and resource_list from the request data
+        model_name = request.data.get('model_name')
+        resource_list = request.data.get('resource_list', [])
+
+        # Call the function to process the API with the received data
+        response_data = process_pick_with_api(resource_list=resource_list, model_name=model_name)
+        
+        # Return the response
         return Response(response_data, status=status.HTTP_201_CREATED)
+
     
