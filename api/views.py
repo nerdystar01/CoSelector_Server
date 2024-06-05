@@ -9,6 +9,6 @@ class CoSelectorView(APIView):
     def post(self, request):
         request_list = request.data
         print(request_list)
-        response_data = process_pick_with_api(request_list)
+        response_data = process_pick_with_api(resource_list= request_list)
         return Response(response_data, status=status.HTTP_201_CREATED)
     
