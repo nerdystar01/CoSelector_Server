@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import coselector_view
+from api.views import CoSelectorView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('coselector/', coselector_view, name='coselectorview'),
+    path('coselector/', CoSelectorView.as_view(), name='coselectorview'),
 
 ]
