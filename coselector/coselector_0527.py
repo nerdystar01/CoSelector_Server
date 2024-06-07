@@ -211,7 +211,6 @@ def process_pick(model_name, target_folder):
     return len(candidate_images)  # 선택된 이미지의 수 반환
 
 def process_pick_with_api(model_name, resource_list):
-    print("activate process_pick_with_api")
     # Load evaluation model
     model_path = os.path.join(BASE_DIR, 'tastemodels', f'{model_name}.keras')
     pkl_path = os.path.join(BASE_DIR, 'tastemodels', f'{model_name}.pkl')
@@ -246,7 +245,6 @@ def process_pick_with_api(model_name, resource_list):
         except Exception as e:
             # Handle the exception if image cannot be retrieved or processed
             resource_object['similarity_score'] = f"Error: {str(e)}"
-    print("end")
     return resource_list
 
 
