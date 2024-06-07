@@ -228,7 +228,8 @@ def process_pick_with_api(model_name, resource_list):
             response.raise_for_status()  # 에러가 발생하면 예외 발생
             image = Image.open(BytesIO(response.content))
             if image is not None:
-                image_np = resize_image(image)
+                image = resize_image(image)
+                image_np = np.array([image], dtype='float32')
                 new_embedding = embedding_model.predict(image_np)[0]
                 distance = evaluate_similarity(new_embedding, embeddings)
 
