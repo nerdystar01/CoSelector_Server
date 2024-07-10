@@ -16,8 +16,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # IMAGE_WIDTH = 1024
 # IMAGE_HEIGHT = 1024
 
-IMAGE_WIDTH = 960
-IMAGE_HEIGHT = 640
+IMAGE_WIDTH = 640
+IMAGE_HEIGHT = 960
 
 batch_size = 80
 EPOCHS = 10
