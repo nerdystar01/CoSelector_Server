@@ -13,8 +13,12 @@ from tensorflow.keras.applications import ResNet50
 
 # 설정 파일 직접 입력
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGE_WIDTH = 1024
-IMAGE_HEIGHT = 1024
+# IMAGE_WIDTH = 1024
+# IMAGE_HEIGHT = 1024
+
+IMAGE_WIDTH = 960
+IMAGE_HEIGHT = 640
+
 batch_size = 80
 EPOCHS = 10
 input_shape = (IMAGE_HEIGHT, IMAGE_WIDTH, 3)  # 이를 함수 내부에 정의하거나 전역 변수로 설정
