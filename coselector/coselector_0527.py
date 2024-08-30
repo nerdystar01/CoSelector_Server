@@ -25,10 +25,13 @@ input_shape = (IMAGE_HEIGHT, IMAGE_WIDTH, 3)  # 이를 함수 내부에 정의�
 
 print("TensorFlow 버전:", tf.__version__)
 physical_devices = tf.config.list_physical_devices('GPU')
+
 if not physical_devices:
     print("사용 가능한 GPU가 없습니다. Window 기준 Tensorflow 2.9 필요")
     sys.exit(1)
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+# tf.config.experimental.set_memory_growth(physical_devices[0], True)
+for device in physical_devices:
+    tf.config.experimental.set_memory_growth(device, True)
 
 # 학습 데이터 준비 클래스
 class DataGenerator(tf.keras.utils.Sequence):
